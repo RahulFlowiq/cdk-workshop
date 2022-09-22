@@ -39,7 +39,7 @@ export class CdkWorkshopStack extends cdk.Stack {
 
     // The basic pipeline declaration. This sets the initial structure
     // of our pipeline
-    const pipeline = new CodePipeline(this, "Pipeline", {
+    new CodePipeline(this, "Pipeline", {
       pipelineName: "WorkshopPipeline",
       synth: new CodeBuildStep("SynthStep", {
         input: CodePipelineSource.codeCommit(repo, "main"),
