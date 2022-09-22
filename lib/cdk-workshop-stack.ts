@@ -22,9 +22,9 @@ export class CdkWorkshopStack extends cdk.Stack {
       pipelineName: "TestPipeline",
       synth: new ShellStep("Synth", {
         input: CodePipelineSource.gitHub(
-          // https://github.com/RahulFlowiq/CI-CD-AWS-PIPELINE-DEMO.git
-          "RahulFlowiq/CDK-Demo.git",
-          "main"
+          // https://github.com/RahulFlowiq/cdk-workshop.git
+          "RahulFlowiq/cdk-workshop.git",
+          "master"
         ),
         commands: ["npm ci", "npm run build", "npx cdk synth"],
       }),
