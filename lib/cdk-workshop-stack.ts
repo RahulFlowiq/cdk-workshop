@@ -17,7 +17,7 @@ export class CdkWorkshopStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    /*    // The code that defines your stack goes here
     new CodePipeline(this, "Pipelines", {
       pipelineName: "TestPipeline",
       synth: new ShellStep("Synth", {
@@ -26,6 +26,23 @@ export class CdkWorkshopStack extends cdk.Stack {
           "RahulFlowiq/cdk-workshop.git",
           "master"
         ),
+        commands: ["npm ci", "npm run build", "npx cdk synth"],
+      }),
+    });
+ */
+    new CodePipeline(this, "Pipeline", {
+      // The pipeline name
+      pipelineName: "MyServicePipeline",
+
+      // How it will be built and synthesized
+      synth: new ShellStep("Synth", {
+        // Where the source can be found
+        input: CodePipelineSource.gitHub(
+          "RahulFlowiq/cdk-workshop.git",
+          "master"
+        ),
+
+        // Install dependencies, build and run cdk synth
         commands: ["npm ci", "npm run build", "npx cdk synth"],
       }),
     });
