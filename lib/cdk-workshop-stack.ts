@@ -9,15 +9,17 @@ import * as apigw from "aws-cdk-lib/aws-apigateway";
 import { HitCounter } from "./hitcounter";
 import { TableViewer } from "cdk-dynamo-table-viewer";
 import {
+  CodeBuildStep,
   CodePipeline,
   CodePipelineSource,
   ShellStep,
 } from "aws-cdk-lib/pipelines";
+import * as codecommit from "aws-cdk-lib/aws-codecommit";
 export class CdkWorkshopStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    /*    // The code that defines your stack goes here
+    /*     // The code that defines your stack goes here
     new CodePipeline(this, "Pipelines", {
       pipelineName: "TestPipeline",
       synth: new ShellStep("Synth", {
@@ -28,21 +30,20 @@ export class CdkWorkshopStack extends cdk.Stack {
         ),
         commands: ["npm ci", "npm run build", "npx cdk synth"],
       }),
+    }); */
+
+    // This creates a new CodeCommit repository called 'WorkshopRepo'
+    const repo = new codecommit.Repository(this, "WorkshopRepo", {
+      repositoryName: "WorkshopRepo",
     });
- */
-    new CodePipeline(this, "Pipeline", {
-      // The pipeline name
-      pipelineName: "MyServicePipeline",
 
-      // How it will be built and synthesized
-      synth: new ShellStep("Synth", {
-        // Where the source can be found
-        input: CodePipelineSource.gitHub(
-          "RahulFlowiq/cdk-workshop.git",
-          "master"
-        ),
-
-        // Install dependencies, build and run cdk synth
+    // The basic pipeline declaration. This sets the initial structure
+    // of our pipeline
+    const pipeline = new CodePipeline(this, "Pipeline", {
+      pipelineName: "WorkshopPipeline",
+      synth: new CodeBuildStep("SynthStep", {
+        input: CodePipelineSource.codeCommit(repo, "main"),
+        installCommands: ["npm install -g aws-cdk"],
         commands: ["npm ci", "npm run build", "npx cdk synth"],
       }),
     });
